@@ -1,3 +1,841 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Points Plaza</title><link rel="stylesheet" href="/styles.css"></head>
-<body><div id="app"></div><script src="/app.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Points Plaza</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- ================= AUTH ================= -->
+<div id="authScreen" class="auth-screen">
+
+    <div class="auth-card">
+
+        <div class="logo">
+            <div class="logo-icon">P</div>
+            <div>
+                <h2>Points Plaza</h2>
+                <span>Earn. Refer. Withdraw.</span>
+            </div>
+        </div>
+
+        <div class="auth-tabs">
+            <button class="auth-tab active" onclick="showAuth('login')">
+                Login
+            </button>
+
+            <button class="auth-tab" onclick="showAuth('register')">
+                Register
+            </button>
+        </div>
+
+        <!-- LOGIN -->
+        <form id="loginForm" class="auth-form">
+
+            <h1>Welcome back 👋</h1>
+            <p>Login to continue to your dashboard.</p>
+
+            <label>Email or Username</label>
+            <input
+                type="text"
+                id="loginIdentity"
+                placeholder="Enter email or username"
+                required
+            >
+
+            <label>Password</label>
+            <input
+                type="password"
+                id="loginPassword"
+                placeholder="Enter password"
+                required
+            >
+
+            <div class="forgot">
+                <a href="#" onclick="forgotPassword()">Forgot password?</a>
+            </div>
+
+            <button class="primary-btn" type="submit">
+                Login
+            </button>
+
+        </form>
+
+        <!-- REGISTER -->
+        <form id="registerForm" class="auth-form hidden">
+
+            <h1>Create account 🚀</h1>
+            <p>Join Points Plaza and start earning points.</p>
+
+            <label>Username</label>
+            <input
+                type="text"
+                id="registerUsername"
+                placeholder="Choose a username"
+                required
+            >
+
+            <label>Full Name</label>
+            <input
+                type="text"
+                id="registerName"
+                placeholder="Your full name"
+                required
+            >
+
+            <label>Email</label>
+            <input
+                type="email"
+                id="registerEmail"
+                placeholder="you@example.com"
+                required
+            >
+
+            <label>Password</label>
+            <input
+                type="password"
+                id="registerPassword"
+                placeholder="Create password"
+                required
+            >
+
+            <label>Confirm Password</label>
+            <input
+                type="password"
+                id="registerConfirm"
+                placeholder="Confirm password"
+                required
+            >
+
+            <button class="primary-btn" type="submit">
+                Create Account
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+
+<!-- ================= MAIN APP ================= -->
+<div id="app" class="app hidden">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            <div class="logo-icon">P</div>
+
+            <div>
+                <strong>Points Plaza</strong>
+                <small>Rewards Platform</small>
+            </div>
+        </div>
+
+        <nav>
+
+            <button class="nav-item active" onclick="showPage('home')">
+                <span>⌂</span>
+                Home
+            </button>
+
+            <button class="nav-item" onclick="showPage('tasks')">
+                <span>✓</span>
+                Tasks
+            </button>
+
+            <button class="nav-item" onclick="showPage('team')">
+                <span>👥</span>
+                Team
+            </button>
+
+            <button class="nav-item" onclick="showPage('withdrawal')">
+                <span>₦</span>
+                Withdrawal
+            </button>
+
+            <button class="nav-item" onclick="showPage('profile')">
+                <span>⚙</span>
+                Profile
+            </button>
+
+            <button
+                id="adminNav"
+                class="nav-item hidden"
+                onclick="showPage('admin')"
+            >
+                <span>🛡</span>
+                Admin
+            </button>
+
+        </nav>
+
+        <button class="logout-btn" onclick="logout()">
+            ↪ Logout
+        </button>
+
+    </aside>
+
+
+    <!-- CONTENT -->
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+
+            <div>
+                <h3 id="pageTitle">Dashboard</h3>
+                <span id="pageSubtitle">
+                    Manage your Points Plaza account
+                </span>
+            </div>
+
+            <div class="top-actions">
+
+                <button class="icon-btn" onclick="openNotifications()">
+                    🔔
+                    <span id="notificationCount" class="notification-count">
+                        0
+                    </span>
+                </button>
+
+                <div class="user-mini">
+                    <div id="userAvatar" class="avatar">U</div>
+
+                    <div>
+                        <strong id="topUsername">User</strong>
+                        <small>Member</small>
+                    </div>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- ================= HOME ================= -->
+        <section id="homePage" class="page active-page">
+
+            <div class="welcome-card">
+
+                <div>
+                    <span class="eyebrow">WELCOME BACK</span>
+
+                    <h1>
+                        Hello, <span id="welcomeUsername">User</span> 👋
+                    </h1>
+
+                    <p>
+                        Complete tasks, invite friends and grow your earnings.
+                    </p>
+                </div>
+
+                <div class="welcome-icon">
+                    ★
+                </div>
+
+            </div>
+
+
+            <div class="balance-grid">
+
+                <div class="balance-card">
+                    <span>Task Balance</span>
+                    <strong>
+                        <span id="taskBalance">0</span> PTS
+                    </strong>
+                    <small>Earned from tasks</small>
+                </div>
+
+                <div class="balance-card">
+                    <span>Referral Balance</span>
+                    <strong>
+                        <span id="referralBalance">0</span> PTS
+                    </strong>
+                    <small>Earned from referrals</small>
+                </div>
+
+                <div class="balance-card total">
+                    <span>Main Balance</span>
+                    <strong>
+                        <span id="mainBalance">0</span> PTS
+                    </strong>
+                    <small>Total available points</small>
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-grid">
+
+                <div class="panel">
+
+                    <div class="panel-heading">
+                        <div>
+                            <h2>Task Progress</h2>
+                            <p>Your current task completion</p>
+                        </div>
+
+                        <strong id="taskProgressText">0%</strong>
+                    </div>
+
+                    <div class="progress">
+                        <div
+                            id="taskProgressBar"
+                            class="progress-bar"
+                            style="width:0%"
+                        ></div>
+                    </div>
+
+                    <div class="progress-info">
+                        <span id="completedTasks">0 completed</span>
+                        <span id="totalTasks">0 tasks</span>
+                    </div>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <div class="panel-heading">
+                        <div>
+                            <h2>Referral Milestones</h2>
+                            <p>Invite friends and unlock bonuses</p>
+                        </div>
+                    </div>
+
+                    <div id="milestonesContainer"></div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= TASKS ================= -->
+        <section id="tasksPage" class="page">
+
+            <div class="section-header">
+                <div>
+                    <span class="eyebrow">EARN POINTS</span>
+                    <h1>Available Tasks</h1>
+                    <p>Complete tasks and submit proof for approval.</p>
+                </div>
+            </div>
+
+            <div id="tasksContainer" class="tasks-grid"></div>
+
+        </section>
+
+
+        <!-- ================= TEAM ================= -->
+        <section id="teamPage" class="page">
+
+            <div class="section-header">
+                <div>
+                    <span class="eyebrow">YOUR NETWORK</span>
+                    <h1>Referral Team</h1>
+                    <p>Invite friends and earn referral rewards.</p>
+                </div>
+            </div>
+
+            <div class="referral-card">
+
+                <div>
+                    <span>Your Referral Link</span>
+
+                    <div class="referral-link">
+                        <input id="referralLink" readonly>
+                        <button onclick="copyReferral()">
+                            Copy
+                        </button>
+                    </div>
+                </div>
+
+                <button class="primary-btn small" onclick="shareReferral()">
+                    Share Link
+                </button>
+
+            </div>
+
+
+            <div class="balance-grid">
+
+                <div class="stat-card">
+                    <span>Total Referrals</span>
+                    <strong id="referralCount">0</strong>
+                </div>
+
+                <div class="stat-card">
+                    <span>Referral Earnings</span>
+                    <strong>
+                        <span id="teamEarnings">0</span> PTS
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="panel-heading">
+                    <div>
+                        <h2>My Referrals</h2>
+                        <p>People who joined using your link</p>
+                    </div>
+                </div>
+
+                <div id="referralList"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= WITHDRAWAL ================= -->
+        <section id="withdrawalPage" class="page">
+
+            <div class="section-header">
+                <div>
+                    <span class="eyebrow">CASH OUT</span>
+                    <h1>Withdrawal</h1>
+                    <p>Convert your points and request payment.</p>
+                </div>
+            </div>
+
+
+            <div class="withdrawal-layout">
+
+                <div class="panel">
+
+                    <h2>Request Withdrawal</h2>
+
+                    <label>Wallet</label>
+
+                    <select id="withdrawWallet" onchange="calculateWithdrawal()">
+                        <option value="task">Task Balance</option>
+                        <option value="referral">Referral Balance</option>
+                    </select>
+
+
+                    <label>Amount (PTS)</label>
+
+                    <input
+                        type="number"
+                        id="withdrawAmount"
+                        placeholder="Enter points"
+                        oninput="calculateWithdrawal()"
+                    >
+
+
+                    <div class="conversion-box">
+
+                        <span>Estimated payout</span>
+
+                        <strong>
+                            ₦<span id="withdrawNaira">0.00</span>
+                        </strong>
+
+                        <small>
+                            Rate:
+                            <span id="conversionRate">100</span>
+                            PTS = ₦1
+                        </small>
+
+                    </div>
+
+
+                    <h3>Bank Details</h3>
+
+                    <label>Bank Name</label>
+
+                    <input
+                        type="text"
+                        id="bankName"
+                        placeholder="Bank name"
+                    >
+
+                    <label>Account Name</label>
+
+                    <input
+                        type="text"
+                        id="accountName"
+                        placeholder="Account name"
+                    >
+
+                    <label>Account Number</label>
+
+                    <input
+                        type="text"
+                        id="accountNumber"
+                        placeholder="Account number"
+                    >
+
+                    <button
+                        class="primary-btn"
+                        onclick="submitWithdrawal()"
+                    >
+                        Request Withdrawal
+                    </button>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <h2>Withdrawal History</h2>
+
+                    <div id="withdrawalHistory"></div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= PROFILE ================= -->
+        <section id="profilePage" class="page">
+
+            <div class="section-header">
+                <div>
+                    <span class="eyebrow">ACCOUNT</span>
+                    <h1>Profile</h1>
+                    <p>Manage your account information.</p>
+                </div>
+            </div>
+
+
+            <div class="profile-grid">
+
+                <div class="panel profile-card">
+
+                    <div class="large-avatar" id="profileAvatar">
+                        U
+                    </div>
+
+                    <h2 id="profileName">User</h2>
+                    <p id="profileEmail">email@example.com</p>
+
+                    <div class="profile-details">
+
+                        <div>
+                            <span>Username</span>
+                            <strong id="profileUsername">username</strong>
+                        </div>
+
+                        <div>
+                            <span>Registration Date</span>
+                            <strong id="registrationDate">-</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <h2>Change Password</h2>
+
+                    <label>Current Password</label>
+                    <input
+                        type="password"
+                        id="currentPassword"
+                    >
+
+                    <label>New Password</label>
+                    <input
+                        type="password"
+                        id="newPassword"
+                    >
+
+                    <label>Confirm Password</label>
+                    <input
+                        type="password"
+                        id="confirmNewPassword"
+                    >
+
+                    <button
+                        class="primary-btn"
+                        onclick="changePassword()"
+                    >
+                        Update Password
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="panel">
+
+                <h2>Earnings History</h2>
+
+                <div id="earningsHistory"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= ADMIN ================= -->
+        <section id="adminPage" class="page">
+
+            <div class="section-header">
+                <div>
+                    <span class="eyebrow">CONTROL CENTER</span>
+                    <h1>Admin Dashboard</h1>
+                    <p>Manage Points Plaza.</p>
+                </div>
+            </div>
+
+
+            <div class="admin-stats">
+
+                <div class="stat-card">
+                    <span>Total Users</span>
+                    <strong id="adminUsers">0</strong>
+                </div>
+
+                <div class="stat-card">
+                    <span>Total Tasks</span>
+                    <strong id="adminTasks">0</strong>
+                </div>
+
+                <div class="stat-card">
+                    <span>Pending Submissions</span>
+                    <strong id="adminSubmissions">0</strong>
+                </div>
+
+                <div class="stat-card">
+                    <span>Pending Withdrawals</span>
+                    <strong id="adminWithdrawals">0</strong>
+                </div>
+
+            </div>
+
+
+            <div class="admin-grid">
+
+                <div class="panel">
+
+                    <div class="panel-heading">
+                        <h2>Task Manager</h2>
+
+                        <button
+                            class="primary-btn small"
+                            onclick="addTask()"
+                        >
+                            + Add Task
+                        </button>
+                    </div>
+
+                    <div id="adminTasksList"></div>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <div class="panel-heading">
+                        <h2>Task Submissions</h2>
+
+                        <button
+                            class="primary-btn small"
+                            onclick="approveAll()"
+                        >
+                            Approve All
+                        </button>
+                    </div>
+
+                    <div id="adminSubmissionsList"></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="panel">
+
+                <h2>Users</h2>
+
+                <div id="adminUsersList"></div>
+
+            </div>
+
+
+            <div class="panel">
+
+                <h2>Platform Settings</h2>
+
+                <div class="settings-grid">
+
+                    <div>
+                        <label>PTS per ₦1</label>
+                        <input
+                            type="number"
+                            id="adminConversion"
+                        >
+                    </div>
+
+                    <div>
+                        <label>Referral Reward</label>
+                        <input
+                            type="number"
+                            id="adminReferralReward"
+                        >
+                    </div>
+
+                </div>
+
+                <button
+                    class="primary-btn"
+                    onclick="saveAdminSettings()"
+                >
+                    Save Settings
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- MOBILE NAV -->
+    <nav class="bottom-nav">
+
+        <button onclick="showPage('home')" class="active">
+            <span>⌂</span>
+            Home
+        </button>
+
+        <button onclick="showPage('tasks')">
+            <span>✓</span>
+            Tasks
+        </button>
+
+        <button onclick="showPage('team')">
+            <span>👥</span>
+            Team
+        </button>
+
+        <button onclick="showPage('withdrawal')">
+            <span>₦</span>
+            Withdraw
+        </button>
+
+        <button onclick="showPage('profile')">
+            <span>⚙</span>
+            Profile
+        </button>
+
+    </nav>
+
+</div>
+
+
+<!-- ================= COMMUNITY MODAL ================= -->
+<div id="communityModal" class="modal hidden">
+
+    <div class="modal-card">
+
+        <button class="close-btn" onclick="closeModal('communityModal')">
+            ×
+        </button>
+
+        <div class="modal-icon">👋</div>
+
+        <h2>Join Our Community</h2>
+
+        <p>
+            Stay updated with new tasks, announcements and important news.
+        </p>
+
+        <div class="community-buttons">
+
+            <a href="#" class="community whatsapp">
+                WhatsApp Community
+            </a>
+
+            <a href="#" class="community telegram">
+                Telegram Channel
+            </a>
+
+        </div>
+
+        <button
+            class="secondary-btn"
+            onclick="closeModal('communityModal')"
+        >
+            Continue to Dashboard
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ================= PROOF MODAL ================= -->
+<div id="proofModal" class="modal hidden">
+
+    <div class="modal-card">
+
+        <button class="close-btn" onclick="closeModal('proofModal')">
+            ×
+        </button>
+
+        <h2>Submit Proof</h2>
+
+        <p id="proofTaskName"></p>
+
+        <input type="hidden" id="proofTaskId">
+
+        <label>Proof</label>
+
+        <textarea
+            id="proofText"
+            rows="5"
+            placeholder="Enter your username, text or proof information..."
+        ></textarea>
+
+        <button
+            class="primary-btn"
+            onclick="submitProof()"
+        >
+            Submit Proof
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ================= NOTIFICATIONS ================= -->
+<div id="notificationPanel" class="notification-panel hidden">
+
+    <div class="notification-header">
+        <h3>Notifications</h3>
+
+        <button onclick="closeNotifications()">×</button>
+    </div>
+
+    <div id="notificationsList"></div>
+
+</div>
+
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+
+<script src="script.js"></script>
+
+</body>
+              </html>
